@@ -89,6 +89,9 @@ minecraft {
 def hasToken = project.hasProperty("githubToken") || System.getenv("REPO_TOKEN") != null || System.getenv("GITHUB_TOKEN") != null
 
 repositories {
+    // A library of functional programing in Scala
+    implementation group: 'org.typelevel', name: "cats-core_2.13", version: '2.1.0'
+
     if (hasToken) {
         maven {
             name = "Scalable Cats Force"
