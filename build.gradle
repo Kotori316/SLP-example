@@ -92,7 +92,8 @@ repositories {
         url = "https://maven.pkg.github.com/Kotori316/SLP"
         credentials {
             username = ""
-            password = "2b5bec6116491631920d2133e3bebe6f01b0e74b"
+            password = <TOKEN>
+            // If you fail to sync gradle project, download jar from CurseForge and put it into mods folder.
         }
     }
 }
