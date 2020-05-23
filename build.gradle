@@ -86,16 +86,27 @@ minecraft {
     }
 }
 
+def hasToken = project.hasProperty("githubToken") || System.getenv("REPO_TOKEN") != null || System.getenv("GITHUB_TOKEN") != null
+
 repositories {
-    maven {
-        name = "Scalable Cats Force"
-        url = "https://maven.pkg.github.com/Kotori316/SLP"
-        credentials {
-            username = ""
-            password = <TOKEN>
-            // If you fail to sync gradle project, download jar from CurseForge and put it into mods folder.
+    if (hasToken) {
+        maven {
+            name = "Scalable Cats Force"
+            url = "https://maven.pkg.github.com/Kotori316/SLP"
+            credentials {
+                username = ""
+                password = project.property("githubToken") ?: System.getenv("REPO_TOKEN") ?: System.getenv("GITHUB_TOKEN") ?: ""
+                // If you fail to sync gradle project, download jar from CurseForge and put it into mods folder.
+            }
+        }
+    } else {
+        maven {
+            // Curse Forge
+            name 'Curse Forge'
+            url 'https://minecraft.curseforge.com/api/maven/'
         }
     }
+
 }
 
 dependencies {
@@ -106,7 +117,10 @@ dependencies {
 
     def scala_version = "2.13.2"
     implementation "org.scala-lang:scala-library:${scala_version}"
-    implementation("com.kotori316:ScalableCatsForce:2.13.2-build-2:dev")
+    if (hasToken)
+        implementation("com.kotori316:ScalableCatsForce:2.13.2-build-2:dev") // From GitHub Package
+    else
+        implementation("scalable-cats-force:ScalableCatsForce-2.13.2-build:2:dev") // From CurseForge maven
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
