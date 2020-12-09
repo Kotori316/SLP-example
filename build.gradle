@@ -88,44 +88,25 @@ minecraft {
     }
 }
 
-def hasToken = project.hasProperty("githubToken") || System.getenv("REPO_TOKEN") != null || System.getenv("GITHUB_TOKEN") != null
-
 repositories {
-    if (hasToken) {
-        maven {
-            name = "Scalable Cats Force"
-            url = "https://maven.pkg.github.com/Kotori316/SLP"
-            credentials {
-                username = ""
-                password = project.property("githubToken") ?: System.getenv("REPO_TOKEN") ?: System.getenv("GITHUB_TOKEN") ?: ""
-                // If you fail to sync gradle project, download jar from CurseForge and put it into mods folder.
-            }
-        }
-    } else {
-        maven {
-            // Curse Forge
-            name 'Curse Forge'
-            url 'https://minecraft.curseforge.com/api/maven/'
-        }
+    maven {
+        name = "Azure-SLP"
+        url = uri("https://pkgs.dev.azure.com/Kotori316/minecraft/_packaging/mods/maven/v1")
     }
-
 }
 
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.16.3-34.1.42'
+    minecraft 'net.minecraftforge:forge:1.16.4-35.1.0'
 
-    def scala_version = "2.13.3"
+    def scala_version = "2.13.4"
     implementation "org.scala-lang:scala-library:${scala_version}"
     // A library of functional programing in Scala
-    implementation group: 'org.typelevel', name: "cats-core_2.13", version: '2.2.0'
+    implementation group: 'org.typelevel', name: "cats-core_" + scala_version.substring(0, scala_version.lastIndexOf(".")), version: '2.3.0'
 
-    if (hasToken)
-        implementation("com.kotori316:ScalableCatsForce:2.13.3-build-5:dev") // From GitHub Package
-    else
-        implementation("scalable-cats-force:ScalableCatsForce-2.13.3-build:5:dev") // From CurseForge maven
+    implementation(group: 'com.kotori316', name: 'ScalableCatsForce'.toLowerCase(Locale.ROOT), version: '2.13.4-build-1', classifier: 'dev')
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
