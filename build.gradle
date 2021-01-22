@@ -18,6 +18,18 @@ version = '1.0'
 group = 'com.yourname.modid' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'modid'
 
+static String getForgeVersion() {
+    if (System.getenv("CI_FORGE") != null) {
+        return System.getenv("CI_FORGE")
+    } else {
+        return 'net.minecraftforge:forge:1.16.4-35.1.0'
+    }
+}
+
+static String getRunDataModsListFromEnv() {
+    return System.getenv("CI_MODS") ?: "examplemod"
+}
+
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
@@ -69,15 +81,15 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
-
+            forceExit false
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', getRunDataModsListFromEnv(), '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
                 examplemod {
@@ -99,7 +111,7 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.16.4-35.1.0'
+    minecraft getForgeVersion()
 
     def scala_version = "2.13.4"
     implementation "org.scala-lang:scala-library:${scala_version}"
@@ -107,6 +119,15 @@ dependencies {
     implementation group: 'org.typelevel', name: "cats-core_" + scala_version.substring(0, scala_version.lastIndexOf(".")), version: '2.3.0'
 
     implementation(group: 'com.kotori316', name: 'ScalableCatsForce'.toLowerCase(Locale.ROOT), version: '2.13.4-build-2', classifier: 'dev')
+
+    if (System.getenv("CI_FORGE") != null || System.getenv("CI_MODS") != null) {
+        // Test Dependencies.
+        String JUPITER_VERSION = System.getenv("JUPITER_VERSION") ?: '5.7.0'
+        runtimeOnly(group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: JUPITER_VERSION)
+        runtimeOnly(group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: JUPITER_VERSION)
+        runtimeOnly(group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: JUPITER_VERSION)
+        runtimeOnly(group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.7.0')
+    }
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
