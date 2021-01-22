@@ -106,7 +106,7 @@ dependencies {
     // A library of functional programing in Scala
     implementation group: 'org.typelevel', name: "cats-core_" + scala_version.substring(0, scala_version.lastIndexOf(".")), version: '2.3.0'
 
-    implementation(group: 'com.kotori316', name: 'ScalableCatsForce'.toLowerCase(Locale.ROOT), version: '2.13.4-build-1', classifier: 'dev')
+    implementation(group: 'com.kotori316', name: 'ScalableCatsForce'.toLowerCase(Locale.ROOT), version: '2.13.4-build-2', classifier: 'dev')
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
