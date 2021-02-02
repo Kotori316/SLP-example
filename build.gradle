@@ -1,3 +1,5 @@
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository
+
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
@@ -104,6 +106,14 @@ repositories {
     maven {
         name = "Azure-SLP"
         url = uri("https://pkgs.dev.azure.com/Kotori316/minecraft/_packaging/mods/maven/v1")
+        content {
+            includeModule("com.kotori316", "ScalableCatsForce".toLowerCase())
+        }
+    }
+    repositories.stream().filter { it instanceof MavenArtifactRepository }.forEach { repo ->
+        repo.content {
+            excludeVersionByRegex(".*", ".*", ".*_mapped_snapshot_.*")
+        }
     }
 }
 
