@@ -103,6 +103,12 @@ minecraft {
 }
 
 repositories {
+    mavenLocal() {
+        content {
+            includeModule("com.kotori316", "ScalableCatsForce".toLowerCase())
+            includeModule("com.kotori316", "ModJar")
+        }
+    }
     maven {
         name = "Azure-SLP"
         url = uri("https://pkgs.dev.azure.com/Kotori316/minecraft/_packaging/mods/maven/v1")
@@ -138,7 +144,7 @@ dependencies {
         runtimeOnly(group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: JUPITER_VERSION)
         runtimeOnly(group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: JUPITER_VERSION)
         runtimeOnly(group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.7.0')
-        runtimeOnly(group: "com.kotori316", name: "ModJar", version: "1.1.13") {
+        runtimeOnly(group: "com.kotori316", name: "ModJar", version: "1.1.15") {
             transitive(false)
         }
     }
