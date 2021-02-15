@@ -24,7 +24,7 @@ static String getForgeVersion() {
     if (System.getenv("CI_FORGE") != null) {
         return 'net.minecraftforge:forge:' + System.getenv("CI_FORGE")
     } else {
-        return 'net.minecraftforge:forge:1.16.4-35.1.0'
+        return 'net.minecraftforge:forge:1.16.5-36.0.26'
     }
 }
 
@@ -138,7 +138,9 @@ dependencies {
         runtimeOnly(group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: JUPITER_VERSION)
         runtimeOnly(group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: JUPITER_VERSION)
         runtimeOnly(group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.7.0')
-        runtimeOnly(group: "com.kotori316", name: "ModJar", version: "1.0")
+        runtimeOnly(group: "com.kotori316", name: "ModJar", version: "1.1.13") {
+            transitive(false)
+        }
     }
 }
 
