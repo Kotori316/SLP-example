@@ -24,7 +24,7 @@ static String getForgeVersion() {
     if (System.getenv("CI_FORGE") != null) {
         return 'net.minecraftforge:forge:' + System.getenv("CI_FORGE")
     } else {
-        return 'net.minecraftforge:forge:1.16.5-36.0.42'
+        return 'net.minecraftforge:forge:1.16.5-36.0.46'
     }
 }
 
