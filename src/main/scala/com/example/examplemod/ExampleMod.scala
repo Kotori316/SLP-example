@@ -38,7 +38,7 @@ object ExampleMod {
 
   private def doClientStuff(event: FMLClientSetupEvent): Unit = {
     // do something that can only be done on the client
-    LOGGER.info("Got game settings {}", event.getMinecraftSupplier.get.gameSettings)
+    LOGGER.info("Got game settings {}", event.getMinecraftSupplier.get.options)
   }
 
   private def enqueueIMC(event: InterModEnqueueEvent): Unit = {
