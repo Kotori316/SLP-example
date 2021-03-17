@@ -67,7 +67,7 @@ object ExampleMod {
 
 // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
 // Event bus for receiving Registry Events)
-// The object must be at the top-level.
+// The object must be at the top-level. Don't forget to fill modid.
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = ExampleMod.MOD_ID)
 object RegistryEvents {
   private val LOGGER = LogManager.getLogger
