@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.minecraftforge.net/' }
         mavenCentral()
     }
     dependencies {
@@ -158,9 +158,9 @@ dependencies {
     implementation(group: 'org.scala-lang', name: 'scala-library', version: scala_version)
     // A library of functional programing in Scala
     // https://mvnrepository.com/artifact/org.typelevel/cats-core
-    implementation(group: 'org.typelevel', name: "cats-core_" + scala_version.substring(0, scala_version.lastIndexOf(".")), version: '2.4.2')
+    implementation(group: 'org.typelevel', name: "cats-core_" + scala_version.substring(0, scala_version.lastIndexOf(".")), version: '2.6.0')
 
-    implementation(group: 'com.kotori316', name: 'ScalableCatsForce'.toLowerCase(Locale.ROOT), version: '2.13.5-build-1', classifier: 'dev')
+    implementation(group: 'com.kotori316', name: 'ScalableCatsForce'.toLowerCase(Locale.ROOT), version: '2.13.5-build-2', classifier: 'dev')
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
