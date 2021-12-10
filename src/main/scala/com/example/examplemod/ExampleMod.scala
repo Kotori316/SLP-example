@@ -1,13 +1,13 @@
 package com.example.examplemod
 
-import net.minecraft.block.{Block, Blocks}
+import net.minecraft.world.level.block.{Block, Blocks}
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.event.RegistryEvent
+import net.minecraftforge.event.server.ServerStartingEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.InterModComms
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.event.lifecycle.{FMLClientSetupEvent, FMLCommonSetupEvent, InterModEnqueueEvent, InterModProcessEvent}
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
 import org.apache.logging.log4j.LogManager
 
@@ -32,18 +32,18 @@ object ExampleMod {
 
   private def setup(event: FMLCommonSetupEvent): Unit = {
     // some preinit code
-    LOGGER.info("HELLO FROM PREINIT")
+    LOGGER.info("HELLO FROM PRE-INIT")
     LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName)
   }
 
   private def doClientStuff(event: FMLClientSetupEvent): Unit = {
     // do something that can only be done on the client
-    LOGGER.info("Got game settings {}", event.getMinecraftSupplier.get.options)
+    LOGGER.info("Hello Client!")
   }
 
   private def enqueueIMC(event: InterModEnqueueEvent): Unit = {
     // some example code to dispatch IMC to another mod
-    InterModComms.sendTo("examplemod", "helloworld", () => {
+    InterModComms.sendTo(MOD_ID, "helloworld", () => {
       LOGGER.info("Hello world from the MDK")
       "Hello world"
     })
@@ -52,13 +52,13 @@ object ExampleMod {
   private def processIMC(event: InterModProcessEvent): Unit = {
     // some example code to receive and process InterModComms from other mods
     import scala.jdk.StreamConverters._
-    val messages = event.getIMCStream.toScala(LazyList).map(_.getMessageSupplier[String].get())
+    val messages = event.getIMCStream.toScala(LazyList).map(_.messageSupplier().get())
     LOGGER.info("Got IMC {}", messages.mkString(", "))
   }
 
   // You can use SubscribeEvent and let the Event Bus discover methods to call
   @SubscribeEvent
-  def onServerStarting(event: FMLServerStartingEvent): Unit = {
+  def onServerStarting(event: ServerStartingEvent): Unit = {
     // do something when the server starts
     LOGGER.info("HELLO from server starting")
   }
