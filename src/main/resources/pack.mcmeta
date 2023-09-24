@@ -1,7 +1,8 @@
 {
-    "pack": {
-        "description": "examplemod resources",
-        "pack_format": 8,
-        "_comment": "Version 8"
-    }
+  "pack": {
+    "description": {
+      "text": "${mod_id} resources"
+    },
+    "pack_format": 15
+  }
 }
