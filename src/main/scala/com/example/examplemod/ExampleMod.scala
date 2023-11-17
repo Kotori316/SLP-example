@@ -1,24 +1,28 @@
 package com.example.examplemod
 
+import cats.Show
+import cats.implicits.toShow
 import net.minecraft.client.Minecraft
 import net.minecraft.core.registries.Registries
 import net.minecraft.world.food.FoodProperties
 import net.minecraft.world.item.{BlockItem, CreativeModeTab, CreativeModeTabs, Item}
-import net.minecraft.world.level.block.{Block, Blocks}
 import net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.world.level.block.{Block, Blocks}
 import net.minecraft.world.level.material.MapColor
-import net.minecraftforge.api.distmarker.Dist
-import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent
-import net.minecraftforge.event.server.ServerStartingEvent
-import net.minecraftforge.eventbus.api.SubscribeEvent
-import net.minecraftforge.fml.ModLoadingContext
-import net.minecraftforge.fml.common.Mod
-import net.minecraftforge.fml.config.ModConfig
-import net.minecraftforge.fml.event.lifecycle.{FMLClientSetupEvent, FMLCommonSetupEvent}
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext
-import net.minecraftforge.registries.{DeferredRegister, ForgeRegistries, RegistryObject}
+import net.neoforged.api.distmarker.Dist
+import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.fml.common.Mod
+import net.neoforged.fml.config.ModConfig
+import net.neoforged.fml.event.lifecycle.{FMLClientSetupEvent, FMLCommonSetupEvent}
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext
+import net.neoforged.fml.{ModList, ModLoadingContext}
+import net.neoforged.neoforge.common.NeoForge
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent
+import net.neoforged.neoforge.event.server.ServerStartingEvent
+import net.neoforged.neoforge.registries.{DeferredRegister, ForgeRegistries, RegistryObject}
 import org.apache.logging.log4j.LogManager
+
+import scala.annotation.static
 
 /**
  * Converted from forge MDK in https://github.com/MinecraftForge/MinecraftForge
@@ -61,7 +65,7 @@ object ExampleMod {
     CREATIVE_MODE_TABS.register(modEventBus)
 
     // Register ourselves for server and other game events we are interested in
-    MinecraftForge.EVENT_BUS.register(this)
+    NeoForge.EVENT_BUS.register(this)
 
     // Register the item to a creative tab// Register the item to a creative tab
     modEventBus.addListener(this.addCreative)
@@ -85,16 +89,28 @@ object ExampleMod {
       event.accept(EXAMPLE_BLOCK_ITEM)
   }
 
+  case class ModID(id: String)
+
+  // Example of Cats instance.
+  implicit val showId: Show[ModID] = (t: ModID) => {
+    val name = ModList.get().getModObjectById[AnyRef](t.id).map[String](o => o.getClass.getName).orElse("None")
+    s"ID: ${t.id}, Class: $name"
+  }
+
   // You can use SubscribeEvent and let the Event Bus discover methods to call
+  //@static
   @SubscribeEvent
   def onServerStarting(event: ServerStartingEvent): Unit = {
     // Do something when the server starts
     LOGGER.info("HELLO from server starting")
+    LOGGER.info(s"Mod($MOD_ID) is loaded. " + event)
+    LOGGER.info(ModID(MOD_ID).show)
   }
 
-  // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
-  @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Array(Dist.CLIENT))
+  // Don't add Mod.EventBusSubscriber on object in NeoForge. It doesn't allow non-static @SubscribeEvent method, but scala creates.
+  // The workaround is to add @static annotation and add @Mod.EventBusSubscriber to the class, not the object.
   object ClientModEvents {
+    @static
     @SubscribeEvent
     def onClientSetup(event: FMLClientSetupEvent): Unit = {
       // Some client setup code
@@ -102,4 +118,8 @@ object ExampleMod {
       LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance.getUser.getName)
     }
   }
+
+  // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
+  @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Array(Dist.CLIENT))
+  class ClientModEvents
 }
